@@ -1,0 +1,51 @@
+#include <stdint.h>
+#include <iostream>
+#include "Image.h"
+#include "Scene.h"
+#include "Sphere.h"
+#include "Cylinder.h"
+#include "Triangle.h"
+
+using namespace std;
+using namespace Raytracer148;
+using namespace Eigen;
+
+int main() {
+    Image im(400,400);
+    
+    Scene scene;
+    
+    Vector3d center;
+    // center[0] = 0;
+    // center[1] = 0;
+    // center[2] = 4;
+    // scene.addShape(new Sphere(center,2));
+    
+    center[0] = -.5;
+    center[1] = 1;
+    center[2] = 2.5;
+    scene.addShape(new Sphere(center,.5));
+    
+    center[0] = 1;
+    center[1] = 0;
+    center[2] = 0;
+    scene.addShape(new Sphere(center,.5));
+
+    Vector3d pV;
+    pV[0] = 2.0;
+    pV[1] = 2.0;
+    pV[2] = 2.0;
+
+    Vector3d dV;
+    dV[0] = 0.0;
+    dV[1] = 0.0;
+    dV[2] = 1.0;
+
+    
+    scene.addShape(new Triangle(center,dV,pV));
+    scene.render(im);
+       
+    im.writePNG("test.png");
+
+    return 0;
+}
