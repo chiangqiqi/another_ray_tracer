@@ -29,12 +29,28 @@ Vector3d Scene::trace(const Ray &ray) {
     result[0] = result[1] = result[2] = 0;
     
     if (r.t < numeric_limits<double>::epsilon()) return result;
-    
+
     Vector3d lightDir = (lightPos - r.position).normalized();
+    
+    //ref_ray is the reflactive light, we want to check if
+    //it is in the shadow
+    Ray ref_ray;
+    ref_ray.origin = r.position;
+    ref_ray.direction = lightDir;
+
+    //if there is some thing in between the postion and the light source
+    //the color shoule be black
+    for (unsigned int i = 0; i < shapes.size(); i++) {
+      HitRecord r = shapes[i]->intersect(ref_ray);
+      if(r.t > 0.0001)  return result;
+    }
+    
+    
     double dot = lightDir.dot(r.normal);
     if (dot < 0) dot = 0;
     
     result[0] = result[1] = result[2] = dot;
+    //result[2] = 0;
     return result;
 }
 
